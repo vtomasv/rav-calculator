@@ -1,0 +1,678 @@
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="Fabian Affolter">
+        <meta name="generator" content="My hands and my keyboard">
+        <title>Risk Assessment Value (RAV) Calculator</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+     
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+         
+
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <!-- <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/album/"> -->
+        <!-- Bootstrap core CSS 
+    <link href="/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    -->
+        <!-- Favicons -->
+    <!-- <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/docs/5.0/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="/docs/5.0/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3"> 
+    <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">-->
+    <meta name="theme-color" content="#7952b3">  
+        <style>
+          .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+          }
+    
+          @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+              font-size: 3.5rem;
+            }
+          }
+
+        </style>
+      </head>
+      <body>
+        
+    <header>
+      <div class="collapse bg-dark" id="navbarHeader">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-8 col-md-7 py-4">
+              <h4 class="text-white">About</h4>
+              <p class="text-muted">The spreadsheet from ICECOM is/was "the standard way" to calculate a RAV. Why another approach? Because that spreadsheet, like everything else around the OSSTMM, is not maintained. Also, the sheet is password-protected, some formulas are using CONSTANT_C which is not documented or visible and contains an "invented unit of measurement" or how would you call "ravs".</br>
+              For further details about the calculation, check the section "4.4 The Operational Security Formula" of the OSSTMM 3.</p>
+            </div>
+            <div class="col-sm-4 offset-md-1 py-4">
+              <h4 class="text-white">Contact</h4>
+              <ul class="list-unstyled">
+                <li><a href="https://twitter.com/fabaff" class="text-white">Follow on Twitter</a></li>
+                <li><a href="mailto:fabian@affolter-engineering.ch">E-Mail me</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+          <a href="#" class="navbar-brand d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <strong>Risk Assessment Value (RAV) Calculator</strong>
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+    
+    <main>
+
+      <div class="container py-4">
+
+
+      <div class="row align-items-md-stretch">
+        <div class="col-md-8">
+          <div class="h-100 p-5 bg-light border rounded-3">
+
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">OPSEC</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Visibility</td>
+                  <td><input onChange="calculate_on_change()"  type="number" step="1" min="0" value="0" class="form-control total_porosity" id="visibility"></td>
+                </tr>
+                <tr>
+                  <td>Access</td>
+                  <td><input onChange="calculate_on_change()"  type="number" step="1" min="0"  value="0" class="form-control total_porosity" id="access"></td>
+                </tr>
+                <tr>
+                  <td>Trust</td>
+                  <td><input onChange="calculate_on_change()"  type="number" step="1" min="0" value="0" class="form-control total_porosity" id="trust"></td>
+                </tr>
+                <tr>
+                  <td>Total Porosity</td>
+                  <td><input type="text" class="form-control" id="total_porosity" value="0" disabled></td>
+                </tr>
+              </tbody>
+            </table>  
+
+                  <table class="table" id="class_a">
+
+                    <thead>
+                      <tr>
+                        <th scope="col">Class B controls</th>
+                        <th scope="col"></th>
+                        <th scope="col">Missing</th>
+
+                      </tr>
+                    </thead>
+                      
+                      <tbody>
+                      <tr>
+                        <td>Authentication</td>
+                        <td><input onChange="calculate_on_change()" type="number" step="1" min="0" value="0" class="form-control total_class_a" id="authentication"></td>
+                        <td><input type="number" value="0" class="form-control total_class_a_missing" id="authentication_missing" disabled></td>
+                      </tr>
+                      <tr>
+                        <td>Indemnification</td>
+                        <td><input onChange="calculate_on_change()"  type="number" step="1" min="0" value="0" class="form-control total_class_a" id="indemnification"></td>
+                        <td><input type="number" value="0" class="form-control total_class_a_missing" id="indemnification_missing" disabled></p></td>
+                      </tr>
+                      <tr>
+                        <td>Resilience</td>
+                        <td><input onChange="calculate_on_change()"  type="number" step="1" min="0" value="0" class="form-control total_class_a" id="resilience"></td>
+                        <td><input type="number" value="0" class="form-control total_class_a_missing" id="resilience_missing" disabled></td>
+                      </tr>
+                      <tr>
+                        <td>Subjugation</td>
+                        <td><input onChange="calculate_on_change()"  type="number" step="1" min="0" value="0" class="form-control total_class_a" id="subjugation"></td>
+                        <td><input type="number" value="0" class="form-control total_class_a_missing" id="subjugation_missing" disabled></td>
+                      </tr>
+                      <tr>
+                        <td>Continuity</td>
+                        <td><input onChange="calculate_on_change()"  type="number" step="1" min="0" value="0" class="form-control total_class_a" id="continuity"></td>
+                        <td><input type="number" value="0" class="form-control total_class_a_missing" id="continuity_missing" disabled></td>
+                      </tr>
+                      <tr>
+                        <td>Total Class A</td>
+                        <td><input type="number" value="0" class="form-control" id="total_class_a" disabled></td>
+                        <td><input type="number" value="0" class="form-control" id="total_class_a_missing" disabled></td>
+                      </tr>
+                    </tbody>
+                  </table>
+     
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Class B controls</th>
+                        <th scope="col"></th>
+                        <th scope="col">Missing</th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Non-Repudiation</td>
+                        <td><input onChange="calculate_on_change()" type="number" step="1" min="0" value="0" class="form-control total_class_b" id="non_repudiation"></td>
+                        <td><input type="number" class="form-control total_class_b_missing" id="non_repudiation_missing" disabled></td>
+                      </tr>
+                      <tr>
+                        <td>Confidentiality</td>
+                        <td><input onChange="calculate_on_change()" type="number" step="1" min="0" value="0" class="form-control total_class_b" id="confidentiality"></td>
+                        <td><input type="number" class="form-control total_class_b_missing" id="confidentiality_missing" disabled></td>
+                      </tr>
+                      <tr>
+                        <td>Privacy</td>
+                        <td><input onChange="calculate_on_change()" type="number" step="1" min="0" value="0" class="form-control total_class_b" id="privacy"></td>
+                        <td><input type="number" class="form-control total_class_b_missing" id="privacy_missing" disabled></td>
+                      </tr>
+                      <tr>
+                        <td>Integrity</td>
+                        <td><input onChange="calculate_on_change()" type="number" step="1" min="0" value="0" class="form-control total_class_b" id="integrity"></td>
+                        <td><input type="number" class="form-control total_class_b_missing" id="integrity_missing" disabled></td>
+                      </tr>
+                      <tr>
+                        <td>Alarm</td>
+                        <td><input onChange="calculate_on_change()" type="number" step="1" min="0" value="0" class="form-control total_class_b" id="alarm"></td>
+                        <td><input type="number" class="form-control total_class_b_missing" id="alarm_missing" disabled></td>
+                      </tr>
+                      <tr>
+                        <td>Total Class B</td>
+                        <td><input type="number" value="0"class="form-control" id="total_class_b" disabled></td>
+                        <td><input type="number" value="0"class="form-control" id="total_class_b_missing" disabled></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                   
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col">True missing</th>
+                        <th scope="col"></th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>All Controls Total</td>
+                        <td><input type="number" class="form-control" id="all_controls_total" disabled></td>
+                        <td><input type="number" class="form-control" id="true_missing" disabled></td>
+                        <td></td>
+                      </tr>
+                      <tr>
+                        <td>Whole Coverage</td>
+                        <td><input type="number" class="form-control" id="whole_coverage" disabled></td>
+                        <td><input type="number" class="form-control" id="true_missing_coverage" disabled></td>
+                        <td><input type="text" class="form-control" id="true_missing_check" disabled></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Limitations</th>
+                          <th scope="col"></th>
+                          <th scope="col">Item value</th>
+                          <th scope="col">Total value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Vulnerabilities</td>
+                          <td><input onChange="calculate_on_change()" type="number" step="1" min="0" value="0" class="form-control total_limitations" id="vulnerabilities"></td>
+                          <td><input type="number" class="form-control" id="vulnerabilities_item_value" disabled></td>
+                          <td><input type="number" class="form-control total_limitations_values" id="vulnerabilities_total_value" disabled></td>
+                        </tr>
+                        <tr>
+                          <td>Weaknesses</td>
+                          <td><input onChange="calculate_on_change()" type="number" step="1" min="0" value="0" class="form-control total_limitations" id="weaknesses"></td>
+                          <td><input type="number" class="form-control" id="weaknesses_item_value" disabled></td>
+                          <td><input type="number" class="form-control total_limitations_values" id="weaknesses_total_value" disabled></td>
+                        </tr>
+                        <tr>
+                          <td>Concerns</td>
+                          <td><input onChange="calculate_on_change()" type="number" step="1" min="0" value="0" class="form-control total_limitations" id="concerns"></td>
+                          <td><input type="number" class="form-control" id="concerns_item_value" disabled></td>
+                          <td><input type="number" class="form-control total_limitations_values" id="concerns_total_value" disabled></td>
+                        </tr>
+                        <tr>
+                          <td>Exposures</td>
+                          <td><input onChange="calculate_on_change()" type="number" step="1" min="0" value="0" class="form-control total_limitations" id="exposures"></td>
+                          <td><input type="number" class="form-control" id="exposures_item_value" disabled></td>
+                          <td><input type="number" class="form-control total_limitations_values" id="exposures_total_value" disabled></td>
+                        </tr>
+                        <tr>
+                          <td>Anomalies</td>
+                          <td><input onChange="calculate_on_change()" type="number" step="1" min="0" value="0" class="form-control total_limitations" id="anomalies"></td>
+                          <td><input type="number" class="form-control" id="anomalies_item_value" disabled></td>
+                          <td><input type="number" class="form-control total_limitations_values" id="anomalies_total_value" disabled></td>
+                        </tr>
+                        <tr>
+                          <td>Total Lmitations</td>
+                          <td><input type="text" class="form-control" id="total_limitations" disabled></td>
+                          <td></td>
+                          <td><input type="text" class="form-control" id="total_limitations_values" disabled></td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="h-100 p-5 bg-light border rounded-3">
+
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">OPSEC</h5>
+              <input type="number" value="0" class="form-control" id="opsec" disabled>
+            </div>
+          </div>
+
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">True Controls</h5>
+              <input type="number" value="0" class="form-control" id="true_controls" disabled>
+            </br>
+              <h5 class="card-title">Full Controls</h5>
+              <input type="number" value="0" class="form-control" id="full_controls" disabled>
+            </div>
+          </div>
+
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">True Coverage A</h5>
+              <input type="number" value="0" class="form-control" id="true_coverage_a" disabled>
+            </br>
+
+              <h5 class="card-title">True Coverage B</h5>
+              <input type="number" value="0" class="form-control" id="true_coverage_b" disabled>
+            </br>
+
+              <h5 class="card-title">Total True Coverage</h5>
+              <input type="number" value="0" class="form-control" id="total_true_coverage" disabled>
+            </div>
+          </div>
+
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">Limitations</h5>
+          <input type="number" value="0" class="form-control" id="limitations" disabled>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">Security Delta</h5>
+          <input type="number" value="0" class="form-control" id="security" disabled>
+        </div>
+      </div>
+
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">True Protection</h5>
+          <input type="number" value="0" class="form-control" id="true_protection" disabled>
+        </div>
+      </div>
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h3 class="card-title">RAV <span id="rav" class="badge bg-secondary">0</span></h3>
+        </div>
+      </div>
+
+
+          </div>
+        </div>
+      </div>
+    </main>
+
+
+    <footer class="text-muted py-5">
+      <div class="container">
+        <p class="float-end mb-1">
+          <a href="#">Back to top</a>
+        </p>
+        <p class="mb-1">RAV calculator is &copy; 2016-2022 by <a href="mailto:fabian@affolter-engineering.ch">Fabian Affolter</a>. Licensed under MIT</p>
+      </div>
+    </footer>
+    
+
+    <script>
+
+     window.addEventListener("load", () => { });
+
+      function calculate_on_change() {
+
+        limitations = [
+          "vulnerabilities",
+          "weaknesses",
+          "concerns",
+          "exposures",
+          "anomalies"
+        ];
+
+        for (const limitation of limitations.values()) {
+          calculate_limitation_total_value(limitation);
+        }
+        const controls = [
+          "authentication",
+          "indemnification",
+          "resilience",
+          "subjugation",
+          "continuity",
+          "non_repudiation",
+          "confidentiality",
+          "privacy",
+          "integrity",
+          "alarm"
+          ];
+
+
+        // Missing controls
+        for (const control of controls.values()) {
+          calculate_missing(control);
+        }
+
+        // Calculate all totals
+        totals = [
+          'total_porosity',
+           'total_class_a',
+            'total_class_b',
+            'total_class_a_missing',
+            'total_class_b_missing',
+            'total_limitations',
+            'total_limitations_values'
+          ];
+        for (const total of totals.values()) {
+          calculate_sum(total);
+        }
+  
+        calculate_all_controls();
+        calculate_opsec();
+        calculate_true_controls();
+        calculate_full_controls();
+        calculate_true_coverage_a();
+        calculate_true_coverage_b();
+        calculate_total_true_coverage();
+        calculate_limitations();
+        calculate_security();
+        calculate_true_protection();
+        calculate_rav();
+
+        calculate_vulnerabilities_item_value();
+        calculate_weaknesses_item_value();
+        calculate_concerns_item_value();
+        calculate_exposures_item_value();
+        calculate_anomalies_item_value();
+        calculate_true_missing_check();
+      }
+
+      function calculate_all_controls() {
+        var total_class_a = parseInt(document.getElementById('total_class_a').value);
+        var total_class_b = parseInt(document.getElementById('total_class_b').value);
+        var all_controls_total = total_class_a + total_class_b;
+        document.getElementById("all_controls_total").value = all_controls_total;
+
+        var total_class_a_missing = parseInt(document.getElementById('total_class_a_missing').value);
+        var total_class_b_missing = parseInt(document.getElementById('total_class_b_missing').value);
+        var true_missing = total_class_a_missing + total_class_b_missing;
+        document.getElementById("true_missing").value = true_missing;
+
+        var total_porosity = parseInt(document.getElementById('total_porosity').value);
+        document.getElementById("whole_coverage").value = ((all_controls_total * 0.1 ) / total_porosity);
+        document.getElementById("true_missing_coverage").value = ((true_missing * 0.1 ) / total_porosity);
+      }
+
+      function calculate_sum(section){
+            var values = document.getElementsByClassName(section);
+            var total = 0;
+            for (var i=0;i<values.length;i++) {
+                if (parseFloat(values[i].value)) {
+                    total += parseFloat(values[i].value);
+                }
+            }
+            document.getElementById(section).value = total;
+        }
+
+      function calculate_missing(control){
+          var total_porosity = parseInt(document.getElementById('total_porosity').value);
+          var value2 = parseInt(document.getElementById(control).value);
+          var result = 0;
+
+          if (!(total_porosity - value2 <= 0)) {
+            result = total_porosity - value2;
+          }
+          document.getElementById(control + "_missing").value = result;
+      }
+
+      function calculate_true_missing_check(){
+          var whole_coverage = parseFloat(document.getElementById('whole_coverage').value);
+          var true_missing_coverage = parseFloat(document.getElementById('true_missing_coverage').value);
+
+          var result = whole_coverage + true_missing_coverage;
+          if (result = 1){
+            var result = "OK, sum = " + result;
+          } else {
+            var result = "NOT OK, sum = " + result;
+          }
+          
+          document.getElementById("true_missing_check").value = result;
+      }
+
+      function calculate_limitation_total_value(limitation){
+        var value1 = parseInt(document.getElementById(limitation).value);
+        var value2 = parseFloat(document.getElementById(limitation + "_item_value").value);
+
+        var result = value1 * value2;
+         document.getElementById(limitation + "_total_value").value = result;
+      }
+
+        function calculate_vulnerabilities_item_value(){
+          var total_porosity = parseInt(document.getElementById('total_porosity').value);
+          var true_missing = parseInt(document.getElementById('true_missing').value);
+
+          if (total_porosity <= 0){
+            var result = 0;
+          } else {
+            var result = (total_porosity + true_missing) / total_porosity;
+          }
+
+          document.getElementById("vulnerabilities_item_value").value = result;
+        }
+
+        function calculate_weaknesses_item_value(){
+          var total_porosity = parseInt(document.getElementById('total_porosity').value);
+          var total_class_a_missing = parseInt(document.getElementById('total_class_a_missing').value);
+
+          if (total_porosity <= 0){
+            var result = 0;
+          } else {
+            var result = (total_porosity + total_class_a_missing) / total_porosity;
+          }
+          document.getElementById("weaknesses_item_value").value = result;
+        }
+
+        function calculate_concerns_item_value(){
+          var total_porosity = parseInt(document.getElementById('total_porosity').value);
+          var total_class_b_missing = parseInt(document.getElementById('total_class_b_missing').value);
+          if (total_porosity <= 0){
+            var result = 0;
+          } else {
+            var result = (total_porosity + total_class_b_missing) / total_porosity;
+          }
+          
+          document.getElementById("concerns_item_value").value = result;
+        }
+
+        function calculate_exposures_item_value(){
+          var total_porosity = parseInt(document.getElementById('total_porosity').value);
+
+          var visibility = parseInt(document.getElementById('visibility').value);
+          var access = parseInt(document.getElementById('access').value);
+
+          var vulnerabilities = parseInt(document.getElementById('vulnerabilities').value);
+          var weaknesses = parseInt(document.getElementById('weaknesses').value);
+          var concerns = parseInt(document.getElementById('concerns').value);
+
+          var true_missing_coverage = parseFloat(document.getElementById('true_missing_coverage').value);
+
+          if (total_porosity <= 0){
+            var result = 0;
+          } else {
+            var result = (((visibility + access) * true_missing_coverage) + vulnerabilities + weaknesses + concerns) / total_porosity;
+          }
+
+          document.getElementById("exposures_item_value").value = result;
+        }
+
+        function calculate_anomalies_item_value(){
+          var total_porosity = parseInt(document.getElementById('total_porosity').value);
+
+          var trust = parseInt(document.getElementById('trust').value);
+
+          var vulnerabilities = parseInt(document.getElementById('vulnerabilities').value);
+          var weaknesses = parseInt(document.getElementById('weaknesses').value);
+          var concerns = parseInt(document.getElementById('concerns').value);
+
+          var true_missing_coverage = parseInt(document.getElementById('true_missing_coverage').value);
+
+          if (total_porosity <= 0){
+            var result = 0;
+          } else {
+            var result = ((trust * true_missing_coverage) + vulnerabilities + weaknesses + concerns) / total_porosity;
+
+          }
+          document.getElementById("anomalies_item_value").value = result;
+        }
+
+        function calculate_opsec(){
+          var total_porosity = parseInt(document.getElementById('total_porosity').value);
+
+          var result = Math.pow(Math.log10((1 + 100 * total_porosity)), 2);
+
+          document.getElementById("opsec").value = result.toFixed(6);
+        }
+
+        function calculate_true_controls(){
+          var total_porosity = parseInt(document.getElementById('total_porosity').value);
+          var true_missing = parseInt(document.getElementById('true_missing').value);
+
+          var result = Math.pow(Math.log10((1 + 100 * (total_porosity - true_missing * 0.1))), 2);
+
+          document.getElementById("true_controls").value = result.toFixed(6);
+        }
+
+        function calculate_full_controls(){
+          var all_controls_total = parseInt(document.getElementById('all_controls_total').value);
+
+          var result = Math.pow(Math.log10((1 + 100 / 10 * all_controls_total)), 2);
+
+          document.getElementById("full_controls").value = result.toFixed(6);
+        }
+
+        function calculate_true_coverage_a(){
+        var total_porosity = parseInt(document.getElementById('total_porosity').value);
+
+          var total_class_a_missing = parseInt(document.getElementById('total_class_a_missing').value);
+
+          if (total_porosity <= 0){
+            var result = 0;
+          } else {
+            var result = (5 * total_porosity - total_class_a_missing) / total_porosity * 0.2;
+          }        
+          document.getElementById("true_coverage_a").value = result;
+        }
+
+        function calculate_true_coverage_b(){
+          var total_porosity = parseInt(document.getElementById('total_porosity').value);
+          var total_class_b_missing = parseInt(document.getElementById('total_class_b_missing').value);
+
+          if (total_porosity <= 0){
+            var result = 0;
+          } else {
+            var result = (5 * total_porosity - total_class_b_missing) / total_porosity * 0.2;
+          } 
+
+          document.getElementById("true_coverage_b").value = result;
+        }
+
+        function calculate_total_true_coverage(){
+          var total_porosity = parseInt(document.getElementById('total_porosity').value);
+
+          var true_missing = parseInt(document.getElementById('true_missing').value);
+
+          if (total_porosity <= 0){
+            var result = 0;
+          } else {
+            var result = 1 - (true_missing / (10 * total_porosity));
+          }
+
+          document.getElementById("total_true_coverage").value = result;
+        }
+
+        function calculate_limitations(){
+          var total_limitations_values = parseInt(document.getElementById('total_limitations_values').value);
+
+          var result = Math.pow(Math.log10((1 + 100 * total_limitations_values)), 2);
+
+          document.getElementById("limitations").value = result.toFixed(6);
+        }
+
+        function calculate_security(){
+          var true_controls = parseFloat(document.getElementById('true_controls').value);
+          var opsec = parseFloat(document.getElementById('opsec').value);
+          var limitations = parseFloat(document.getElementById('limitations').value);
+
+          var result =true_controls - opsec - limitations;
+          document.getElementById("security").value = result.toFixed(2);
+        }
+
+        function calculate_true_protection(){
+          var true_controls = parseFloat(document.getElementById('true_controls').value);
+          var opsec = parseFloat(document.getElementById('opsec').value);
+          var limitations = parseFloat(document.getElementById('limitations').value);
+
+          var result = 100 + (true_controls - opsec - limitations);
+          document.getElementById("true_protection").value = result.toFixed(2);
+        }
+
+
+        function calculate_rav(){
+          var security = parseFloat(document.getElementById('security').value);
+          var opsec = parseFloat(document.getElementById('opsec').value);
+          var full_controls = parseFloat(document.getElementById('full_controls').value);
+          var limitations = parseFloat(document.getElementById('limitations').value);
+
+          var result = 100 +  security - 1 / 100 * (opsec * full_controls - opsec * limitations + full_controls * limitations);
+          document.getElementById("rav").innerHTML = result.toFixed(2);
+        }
+         </script>
+    
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.bundle.min.js"></script>
+          
+      </body>
+    </html>
+    
